@@ -1,0 +1,169 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>通往一億的進度條</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBFAF7; --ink:#1A2420; --sub:#5C625E; --mut:#8A8F8B;
+    --line:#E5E2D9; --card:#FFFFFF;
+    --teal:#0F6E56; --teal-bg:#E4F1EC;
+    --coral:#C4571F; --coral-bg:#FBEBDF;
+    --gold:#B8892B;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+    line-height:1.6;padding:20px 16px 48px;max-width:600px;margin:0 auto}
+  .num{font-variant-numeric:tabular-nums lining-nums}
+  h1{font-size:22px;font-weight:700;margin:0 0 3px}
+  .lede{color:var(--sub);font-size:14px;margin:0 0 18px}
+
+  .top{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:10px}
+  .top label{font-size:13px;color:var(--sub);display:block;margin-bottom:6px}
+  .inrow{display:flex;align-items:baseline;gap:8px}
+  .inrow span{font-size:20px;font-weight:700;color:var(--mut)}
+  input{font-family:inherit;font-size:24px;font-weight:700;color:var(--ink);
+    border:none;border-bottom:2px solid var(--teal);background:none;width:150px;
+    padding:2px 0;outline:none;font-variant-numeric:tabular-nums}
+  .ovr{margin-top:14px}
+  .ovr-lab{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-bottom:5px}
+  .obar{height:8px;background:#EEEBE2;border-radius:99px;overflow:hidden}
+  .ofill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:99px;width:0;transition:width .6s cubic-bezier(.2,.7,.2,1)}
+
+  .stage{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin-bottom:11px;position:relative;overflow:hidden}
+  .stage.done{border-color:#9FD8C4;background:#F5F8F5}
+  .shead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:2px}
+  .amt{font-size:19px;font-weight:700}
+  .amt small{font-size:13px;color:var(--mut);font-weight:500;margin-left:4px}
+  .time{font-size:12px;color:var(--mut);text-align:right;flex:0 0 auto;padding-top:3px}
+  .eng{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.3px;
+    padding:3px 9px;border-radius:99px;margin:6px 0 10px}
+  .e-disc{background:var(--teal-bg);color:var(--teal)}
+  .e-mix{background:#EAF0E6;color:#4A6B2E}
+  .e-inv{background:#E6EEF5;color:#2A5B8C}
+  .e-biz{background:var(--coral-bg);color:var(--coral)}
+  .e-asset{background:#F5ECD6;color:var(--gold)}
+
+  .sbar{height:7px;background:#EEEBE2;border-radius:99px;overflow:hidden;margin-bottom:11px}
+  .sfill{height:100%;border-radius:99px;width:0;background:var(--teal);transition:width .6s cubic-bezier(.2,.7,.2,1)}
+  .stage.done .sfill{background:#3FA981}
+
+  ul{margin:0;padding:0;list-style:none}
+  li{font-size:13px;color:var(--ink);padding:4px 0 4px 18px;position:relative;line-height:1.55}
+  li:before{content:"";position:absolute;left:2px;top:11px;width:5px;height:5px;border-radius:50%;background:var(--teal)}
+  .stage.biz li:before{background:var(--coral)}
+  .flag{font-size:12px;color:var(--coral);font-weight:500;margin:8px 0 0;padding:8px 10px;background:var(--coral-bg);border-radius:8px;line-height:1.5}
+
+  .note{font-size:12px;color:var(--mut);line-height:1.75;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+  .note b{color:var(--sub)}
+</style>
+
+<h1>通往一億的進度條</h1>
+<p class="lede">前兩關靠你，後面靠事業。每一關的引擎都不一樣。</p>
+
+<div class="top">
+  <label>目前總資產（投資＋現金＋緩衝，可隨時改）</label>
+  <div class="inrow"><span>NT$</span><input id="assets" type="text" inputmode="numeric" value="23,000"></div>
+  <div class="ovr">
+    <div class="ovr-lab"><span>距離一億</span><span id="ovrPct">0.02%</span></div>
+    <div class="obar"><div class="ofill" id="ovrFill"></div></div>
+  </div>
+</div>
+
+<div id="stages"></div>
+
+<p class="note">
+  <b>時間為示意，不是承諾。</b>前兩關(10萬、50萬)你能靠紀律＋投資自己走到；100萬以上，主引擎換成事業獲利與「事業本身的資產價值」，時間高度取決於事業能長多大。<br><br>
+  <b>三條鐵律貫穿全程：</b>① 收入調高時死守不膨脹生活，多賺的整筆進飛輪。② 緩衝站穩前不冒事業以外的險。③ 交易(小台/NQ/ES)永遠是另一本帳，盈虧不進這個飛輪——它是興趣與機會，不是加速器。<br><br>
+  非持照理財顧問，這是幫你把方向與順序理清楚，實際調度你自己拍板。
+</p>
+
+<script>if(!window.storage){window.storage={async get(k){try{const v=localStorage.getItem(k);return v==null?null:{key:k,value:v};}catch(e){return null;}},async set(k,v){try{localStorage.setItem(k,v);}catch(e){}return{key:k,value:v};}};}</script>
+<script>
+  const M = [
+    {hi:100000, lo:0, label:'10 萬', sub:'安全網', eng:'引擎：紀律（先存再花）', ec:'e-disc',
+     time:'約 10–12 個月', items:[
+      '停定期定額 → 建緩衝金到 2 個月生活費',
+      '每月 10 號先轉 11,000，把漏財堵死',
+      '本質是「安全網」不是財富：讓你之後敢冒事業的險而不破產'
+     ]},
+    {hi:500000, lo:100000, label:'50 萬', sub:'種子資本', eng:'引擎：紀律 ＋ 投資複利', ec:'e-mix',
+     time:'約 3 年', items:[
+      '緩衝達標後恢復定期定額，全球 ETF 為主（分散台灣單一風險）',
+      '森喵維持獲利、SaaS 訂戶累積 MRR（會複利的月費收入）',
+      '提領隨事業站穩微調高，多領的整筆進飛輪',
+      '這是最後一關「靠紀律能主導」的里程碑'
+     ]},
+    {hi:1000000, lo:500000, label:'100 萬', sub:'第一桶金', eng:'引擎：投資複利 ＋ 事業提領拉高', ec:'e-inv',
+     time:'約 5 年', items:[
+      '七位數本金，複利開始有感（年報酬就是幾萬起跳）',
+      '三條事業線分工穩定，個人提領 40k → 50k+',
+      '車貸若無違約金，用閒錢砍本金 → 永久釋放 11,000/月',
+      '絕不挖緩衝去還車貸或加碼'
+     ]},
+    {hi:3000000, lo:1000000, label:'300 萬', sub:'轉折點', eng:'引擎：事業獲利放大（存不出來了）', ec:'e-biz', biz:true,
+     time:'約 8–10 年', items:[
+      '誠實：從這裡開始，薪水提領存不到目標，主引擎換成「事業賺多少」',
+      '森喵擴品類/通路、3PL 客戶數放大、SaaS 衝訂戶',
+      '個人資產 = 投資組合 ＋ 事業分紅累積'
+     ], flag:'這一關是分水嶺：力氣要從「省」轉到「把事業做大」。'},
+    {hi:10000000, lo:3000000, label:'1000 萬', sub:'資產化', eng:'引擎：事業的「資產價值」', ec:'e-asset', biz:true,
+     time:'約 12–18 年', items:[
+      '你的公司本身變成有價資產：SaaS 的 MRR、品牌、3PL 客戶基礎',
+      '一個穩定獲利的 SaaS，估值可達年營收(ARR)的 3–5 倍',
+      '重點從「賺現金」轉到「養大一個可被估值、可被買的資產」'
+     ]},
+    {hi:50000000, lo:10000000, label:'5000 萬', sub:'股權價值', eng:'引擎：規模化 or 部分變現', ec:'e-biz', biz:true,
+     time:'需一次質變', items:[
+      '需要質變：SaaS 上規模、引入資金加速、或賣掉一條成熟事業線',
+      '資產不再是現金堆疊，而是「股權價值」',
+      '這一步靠的是事業的天花板，不是紀律'
+     ]},
+    {hi:100000000, lo:50000000, label:'1 億', sub:'人生級目標', eng:'引擎：變現事件 ＋ 數十年複利', ec:'e-asset', biz:true,
+     time:'高度不確定', items:[
+      '通常靠一次流動性事件(賣掉事業/一條線) ＋ 長期複利的資本',
+      '能不能到，取決於事業能長多大，不是紀律問題',
+      '方向清楚：養大事業價值 → 變現 → 讓資本複利滾下去'
+     ]},
+  ];
+  const KEY='wei-1e-roadmap-v1';
+  const CHECK='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#0F6E56" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M4 12l5 5L20 6"/></svg>';
+
+  const parse = s => parseInt(String(s).replace(/[^0-9]/g,''),10)||0;
+  const grp = n => n.toLocaleString('en-US');
+
+  function render(a){
+    const box=document.getElementById('stages'); box.innerHTML='';
+    M.forEach(m=>{
+      let pct, done=false;
+      if(a>=m.hi){pct=100;done=true;}
+      else if(a<=m.lo){pct=0;}
+      else pct=Math.round((a-m.lo)/(m.hi-m.lo)*100);
+      const el=document.createElement('div');
+      el.className='stage'+(done?' done':'')+(m.biz?' biz':'');
+      el.innerHTML=
+        '<div class="shead"><div class="amt">'+(done?CHECK+' ':'')+m.label+'<small>'+m.sub+'</small></div>'+
+        '<div class="time">'+m.time+'</div></div>'+
+        '<div class="eng '+m.ec+'">'+m.eng+'</div>'+
+        '<div class="sbar"><div class="sfill" style="width:'+pct+'%"></div></div>'+
+        '<ul>'+m.items.map(i=>'<li>'+i+'</li>').join('')+'</ul>'+
+        (m.flag?'<p class="flag">'+m.flag+'</p>':'');
+      box.appendChild(el);
+    });
+    const op=(a/100000000*100);
+    document.getElementById('ovrPct').textContent=(op<0.01?'<0.01':op.toFixed(2))+'%';
+    document.getElementById('ovrFill').style.width=Math.max(op,0.5)+'%';
+  }
+
+  const inp=document.getElementById('assets');
+  async function boot(){
+    try{const r=await window.storage.get(KEY); if(r&&r.value){inp.value=grp(parse(r.value));}}catch(e){}
+    render(parse(inp.value));
+  }
+  inp.addEventListener('input',()=>{ const a=parse(inp.value); render(a); });
+  inp.addEventListener('blur',async()=>{ const a=parse(inp.value); inp.value=grp(a); render(a);
+    try{await window.storage.set(KEY,String(a));}catch(e){} });
+  boot();
+</script>
