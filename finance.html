@@ -164,7 +164,7 @@
   // 月份清單（從本月起 18 個月）
   function genMonths(){const out=[];const d=new Date();let y=d.getFullYear(),m=d.getMonth()+1;
     for(let i=0;i<18;i++){out.push({key:y+'-'+m,label:y+'/'+String(m).padStart(2,'0')});m++;if(m>12){m=1;y++;}}return out;}
-  function savedFor(k){return state.saves[k]!=null?state.saves[k]:state.saverule.amount;}
+  function savedFor(k){return state.saves[k]!=null?state.saves[k]:0;}
 
   function renderHeader(){
     document.getElementById('title').textContent=state.profile.name?state.profile.name+' 的理財':'我的理財';
