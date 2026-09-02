@@ -154,7 +154,7 @@
   function save(){Store.set(KEY,JSON.stringify(state));}
 
   const MONTHS=genMonths();
-  function savedFor(k){return state.saves[k]!=null?state.saves[k]:MONTHS.find(m=>m.key===k).plan;}
+  function savedFor(k){return state.saves[k]!=null?state.saves[k]:0;}
 
   function renderHero(cum){
     document.getElementById('cumTotal').textContent=grp(cum);
