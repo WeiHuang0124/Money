@@ -128,6 +128,7 @@
       '方向清楚：養大事業價值 → 變現 → 讓資本複利滾下去'
      ]},
   ];
+  const Shared={read(){try{return JSON.parse(localStorage.getItem("okr-shared")||"{}");}catch(e){return{};}},write(p){try{const s=this.read();Object.assign(s,p);localStorage.setItem("okr-shared",JSON.stringify(s));}catch(e){}}};
   const KEY='wei-1e-roadmap';
   const LEGACY=['wei-1e-roadmap-v1'];  // 舊 KEY 自動撿回
   const CHECK='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#0F6E56" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M4 12l5 5L20 6"/></svg>';
@@ -163,11 +164,12 @@
     try{let r=await window.storage.get(KEY);
       if(!(r&&r.value)){for(const lk of LEGACY){const o=await window.storage.get(lk);if(o&&o.value){r=o;break;}}}
       if(r&&r.value){inp.value=grp(parse(r.value));}}catch(e){}
+    const sh=Shared.read();if(sh.savings!=null)inp.value=grp(sh.savings);
     render(parse(inp.value));
     try{await window.storage.set(KEY,String(parse(inp.value)));}catch(e){}
   }
   inp.addEventListener('input',()=>{ const a=parse(inp.value); render(a); });
   inp.addEventListener('blur',async()=>{ const a=parse(inp.value); inp.value=grp(a); render(a);
-    try{await window.storage.set(KEY,String(a));}catch(e){} });
+    try{await window.storage.set(KEY,String(a));}catch(e){} Shared.write({savings:a}); });
   boot();
 </script>

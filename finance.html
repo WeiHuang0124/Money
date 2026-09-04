@@ -187,6 +187,7 @@
   const Store={mem:{},get(k){try{return localStorage.getItem(k);}catch(e){return this.mem[k]??null;}},
     set(k,v){try{localStorage.setItem(k,v);}catch(e){this.mem[k]=v;}}};
   /* ===== 資料搬遷系統：KEY 永遠不變，改版自動升級舊資料 ===== */
+  const Shared={read(){try{return JSON.parse(localStorage.getItem("okr-shared")||"{}");}catch(e){return{};}},write(p){try{const s=this.read();Object.assign(s,p);localStorage.setItem("okr-shared",JSON.stringify(s));}catch(e){}}};
   const KEY='myfin';                 // 永久固定，不再隨版本改
   const LEGACY=['myfin-v2','myfin-v1']; // 舊版 KEY，首次載入自動搬過來
   const SCHEMA=2;                    // 目前資料版本。未來加欄位就 +1，並在 migrate() 補一段規則
@@ -300,7 +301,7 @@
       const el=document.createElement('div');el.className='mrow'+(hit?' ms':'');
       el.innerHTML='<div class="m-date">'+mo.label+'</div><div class="m-in"><label>這個月存入</label><input type="text" inputmode="numeric" data-k="'+mo.key+'" value="'+grp(val)+'"></div><div class="m-cum"><div class="c num">'+grp(cum)+'</div><div class="l">累計</div>'+(hit?'<div class="m-badge">'+hit+'</div>':'')+'</div>';box.appendChild(el);});
     box.querySelectorAll('input[data-k]').forEach(inp=>{inp.onblur=()=>{state.saves[inp.dataset.k]=parse(inp.value);save();renderSave();};inp.onkeydown=e=>{if(e.key==='Enter')inp.blur();};});
-    let total=0;genMonths().forEach(mo=>total+=savedFor(mo.key));document.getElementById('cum').textContent=grp(total);
+    let total=0;genMonths().forEach(mo=>total+=savedFor(mo.key));document.getElementById('cum').textContent=grp(total);Shared.write({savings:total});
     document.getElementById('goalLab').textContent=state.goal.name+' '+grp(target);const pct=target?Math.min(100,Math.round(total/target*100)):0;
     document.getElementById('goalPct').textContent=pct+'%';document.getElementById('cumBar').style.width=Math.max(2,pct)+'%';}
 
