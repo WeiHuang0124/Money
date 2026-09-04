@@ -1,0 +1,92 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>資料救援</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#FBFAF7;--ink:#1A2420;--sub:#5C625E;--mut:#8A8F8B;--line:#E5E2D9;--card:#FFFFFF;--teal:#0F6E56;--teal-bg:#E4F1EC;--gold:#B8892B;--red:#B4322A}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;line-height:1.5;padding:18px 14px 44px;max-width:600px;margin:0 auto}
+  h1{font-size:20px;font-weight:700;margin:0 0 4px}
+  .hi{color:var(--sub);font-size:13px;margin:0 0 14px}
+  .sum{background:var(--teal-bg);border:1px solid #Bfe0d3;border-radius:12px;padding:12px 14px;font-size:13.5px;color:var(--teal);margin-bottom:14px}
+  .item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .item.known{border-color:#9FD8C4}
+  .k{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--teal-bg);color:var(--teal)}
+  .tag.old{background:#FBF0DC;color:var(--gold)}
+  .meta{font-size:11.5px;color:var(--mut);margin:3px 0 8px}
+  pre{background:#0E1512;color:#EAF2ED;font-size:11px;border-radius:8px;padding:10px;overflow:auto;max-height:180px;margin:0;white-space:pre-wrap;word-break:break-all}
+  .btns{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+  button{font-family:inherit;font-size:12.5px;font-weight:700;border-radius:99px;padding:7px 13px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--sub)}
+  button.p{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .empty{text-align:center;color:var(--mut);font-size:14px;padding:30px 0}
+  .note{font-size:11.5px;color:var(--mut);line-height:1.7;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;padding:9px 16px;border-radius:99px;opacity:0;transition:.3s;pointer-events:none}
+  .toast.show{opacity:1}
+</style>
+
+<h1>🔍 資料救援</h1>
+<p class="hi">這頁會列出你這支手機、這個瀏覽器裡所有存過的資料——包含被舊版「遺留」的。</p>
+<div class="sum" id="summary">掃描中…</div>
+<div id="list"></div>
+<div class="note" id="foot"></div>
+<div class="toast" id="toast">已複製</div>
+
+<script>
+  // 已知的 App 資料鍵：目前用的 + 歷史舊版
+  const KNOWN={
+    'myfin':'我的理財（目前）',
+    'myfin-v2':'我的理財（舊版 v2）',
+    'myfin-v1':'我的理財（舊版 v1）',
+    'wei-hub-v1':'一億作戰中心',
+    'wei-budget-v1':'信封預算',
+    'wei-quest-game-v1':'每日任務',
+    'wei-quest-live-v1':'每日任務（Live）',
+    'wei-1e-roadmap-v1':'一億路線圖',
+    'wei-1e-dashboard-v1':'退休儀表板',
+    'wei-flywheel-tracker-v1':'三個月起跑計畫'
+  };
+  const OLD=new Set(['myfin-v2','myfin-v1','wei-quest-live-v1','wei-1e-dashboard-v1']);
+
+  function bytes(s){return new Blob([s]).size;}
+  function fmtSize(n){return n<1024?n+' B':(n/1024).toFixed(1)+' KB';}
+  function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1400);}
+
+  function scan(){
+    let keys=[];
+    try{for(let i=0;i<localStorage.length;i++)keys.push(localStorage.key(i));}
+    catch(e){document.getElementById('summary').textContent='⚠️ 無法讀取 localStorage（可能是隱私模式或被瀏覽器封鎖）。';return;}
+    // 已知的排前面，舊版標記
+    keys.sort((a,b)=>{const ka=KNOWN[a]?0:1,kb=KNOWN[b]?0:1;return ka-kb||a.localeCompare(b);});
+
+    const list=document.getElementById('list');list.innerHTML='';
+    let known=0,total=keys.length;
+    if(!total){document.getElementById('summary').innerHTML='這個瀏覽器裡<b>沒有任何存檔資料</b>。';
+      document.getElementById('list').innerHTML='<div class="empty">空的。如果你確定填過資料，可能是：<br>①在別的瀏覽器/手機填的 ②清過瀏覽器資料 ③刪過 App 重裝。<br>這幾種情況資料就真的沒了。</div>';return;}
+
+    keys.forEach(k=>{
+      let val='';try{val=localStorage.getItem(k)||'';}catch(e){val='(讀取失敗)';}
+      const isKnown=!!KNOWN[k];if(isKnown)known++;
+      let pretty=val;try{pretty=JSON.stringify(JSON.parse(val),null,1);}catch(e){}
+      const el=document.createElement('div');el.className='item'+(isKnown?' known':'');
+      el.innerHTML='<div class="k">'+k+(isKnown?' <span class="tag'+(OLD.has(k)?' old':'')+'">'+KNOWN[k]+(OLD.has(k)?' · 舊版':'')+'</span>':'')+'</div>'+
+        '<div class="meta">'+fmtSize(bytes(val))+'</div>'+
+        '<pre>'+esc(pretty)+'</pre>'+
+        '<div class="btns"><button class="p" data-copy="'+encodeURIComponent(k)+'">複製這筆</button></div>';
+      list.appendChild(el);
+    });
+    document.getElementById('summary').innerHTML='共找到 <b>'+total+'</b> 筆資料，其中 <b>'+known+'</b> 筆是這個 App 的（含舊版）。<br>下面藍框那些就是可能救得回來的舊資料——點「複製這筆」把內容存起來，再貼給我，我教你怎麼倒回現在的版本。';
+
+    list.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>{
+      const k=decodeURIComponent(b.dataset.copy);const v=localStorage.getItem(k)||'';
+      copy(k+'\n'+v);toast('已複製 '+k);});
+
+    document.getElementById('foot').innerHTML='想一次備份全部：<button id="dumpAll">複製全部資料</button>';
+    document.getElementById('dumpAll').onclick=()=>{
+      const all={};for(let i=0;i<localStorage.length;i++){const kk=localStorage.key(i);all[kk]=localStorage.getItem(kk);}
+      copy(JSON.stringify(all,null,2));toast('已複製全部');};
+  }
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function copy(t){try{navigator.clipboard.writeText(t);}catch(e){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}}
+  scan();
+</script>

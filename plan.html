@@ -127,14 +127,17 @@
     {id:'m0410', date:'4/10',  note:'緩衝達標 → 保費專款2,333 + 恢復定期定額', buf:0, cap:true},
   ];
   const TARGET = 60000;
-  const KEY = 'wei-flywheel-tracker-v1';
+  const KEY = 'wei-flywheel-tracker';
+  const LEGACY = ['wei-flywheel-tracker-v1'];  // 舊 KEY 自動撿回
   const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>';
   let state = {stop:false, months:{}};
 
   async function load(){
-    try{ const r = await window.storage.get(KEY);
+    try{ let r = await window.storage.get(KEY);
+      if(!(r&&r.value)){for(const lk of LEGACY){const o=await window.storage.get(lk);if(o&&o.value){r=o;break;}}}
       if(r && r.value){ state = JSON.parse(r.value); } }catch(e){}
     if(!state.months) state.months = {};
+    await save();
   }
   async function save(){
     try{ await window.storage.set(KEY, JSON.stringify(state)); }catch(e){}

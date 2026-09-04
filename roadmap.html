@@ -128,7 +128,8 @@
       '方向清楚：養大事業價值 → 變現 → 讓資本複利滾下去'
      ]},
   ];
-  const KEY='wei-1e-roadmap-v1';
+  const KEY='wei-1e-roadmap';
+  const LEGACY=['wei-1e-roadmap-v1'];  // 舊 KEY 自動撿回
   const CHECK='<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#0F6E56" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M4 12l5 5L20 6"/></svg>';
 
   const parse = s => parseInt(String(s).replace(/[^0-9]/g,''),10)||0;
@@ -159,8 +160,11 @@
 
   const inp=document.getElementById('assets');
   async function boot(){
-    try{const r=await window.storage.get(KEY); if(r&&r.value){inp.value=grp(parse(r.value));}}catch(e){}
+    try{let r=await window.storage.get(KEY);
+      if(!(r&&r.value)){for(const lk of LEGACY){const o=await window.storage.get(lk);if(o&&o.value){r=o;break;}}}
+      if(r&&r.value){inp.value=grp(parse(r.value));}}catch(e){}
     render(parse(inp.value));
+    try{await window.storage.set(KEY,String(parse(inp.value)));}catch(e){}
   }
   inp.addEventListener('input',()=>{ const a=parse(inp.value); render(a); });
   inp.addEventListener('blur',async()=>{ const a=parse(inp.value); inp.value=grp(a); render(a);
