@@ -9,7 +9,7 @@
     --teal:#0F6E56;--teal-bg:#E4F1EC;--coral:#C4571F;--coral-bg:#FBEBDF;--gold:#B8892B;--green:#2E8B57;--red:#B4322A;--blue:#2A6BB0;--purple:#7A4FB0}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;
-    -webkit-font-smoothing:antialiased;line-height:1.5;padding:18px 14px 44px;max-width:580px;margin:0 auto}
+    -webkit-font-smoothing:antialiased;line-height:1.5;padding:calc(env(safe-area-inset-top) + 14px) 14px 44px;max-width:580px;margin:0 auto}
   .num{font-variant-numeric:tabular-nums lining-nums}
   h1{font-size:20px;font-weight:700;margin:0 0 2px}
   .hi{color:var(--sub);font-size:13px;margin:0 0 14px}
@@ -75,8 +75,9 @@
   .savebtn{width:100%;font-family:inherit;font-size:15px;font-weight:700;color:#fff;background:var(--teal);border:none;border-radius:11px;padding:13px;cursor:pointer;margin-top:6px}
   .empty{font-size:12.5px;color:var(--mut);padding:2px}
   .note{font-size:11.5px;color:var(--mut);line-height:1.7;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
-  .fab-r{position:fixed;top:13px;right:13px;z-index:50;width:38px;height:38px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.1)}
-  .fab-r svg{width:19px;height:19px}
+  .apphead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .r-open{flex:0 0 auto;width:42px;height:42px;border-radius:12px;background:var(--teal-bg);border:1px solid #9FD8C4;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .r-open svg{width:21px;height:21px}
   .rmask{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:60;display:none;align-items:flex-end}
   .rmask.show{display:flex}
   .rpanel{background:var(--bg);width:100%;max-height:84vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 15px 30px}
@@ -94,11 +95,9 @@
 
 </style>
 
-<div class="fab-r" id="rBtn" title="資料救援/重整"><svg viewBox="0 0 24 24" fill="none" stroke="#0F6E56" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></div>
 <div class="rmask" id="rMask"><div class="rpanel"><h2>資料救援 / 重整</h2><p class="rd">撈回這支手機、這個 App 存過的舊資料。點「撈回」把舊資料匯入現在的版本。<br>⚠️ 只撈得到「用這個入口記過」的資料。</p><div id="rList"></div><button class="rclose" id="rClose">關閉</button></div></div>
 
-<h1 id="title">我的理財</h1>
-<p class="hi">收入・記帳・信用卡・代墊・存錢，全部自己設定</p>
+<div class="apphead"><div><h1 id="title">我的理財</h1><p class="hi">收入・記帳・信用卡・代墊・存錢，全部自己設定</p></div><button class="r-open" id="rBtn" title="資料救援 / 撈回舊資料"><svg viewBox="0 0 24 24" fill="none" stroke="#0F6E56" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button></div>
 <div class="banner" id="banner">👋 第一次使用？先到「設定」填先存金額、信封和存錢目標，再回來記帳。</div>
 
 <div class="tabs">
@@ -220,16 +219,18 @@
     if(!raw){for(const lk of LEGACY){const old=Store.get(lk);if(old){raw=old;break;}}} // 首次：從舊 KEY 搬遷
     if(raw){try{state=deepMerge(DEFAULT,migrate(JSON.parse(raw)));}catch(e){state=JSON.parse(JSON.stringify(DEFAULT));}}
     if(!state.incomes)state.incomes=[];if(!state.tx)state.tx=[];
-    if(state.month!==curMonth()){state.tx=[];state.incomes=[];state.month=curMonth();}
+    if(state.month!==curMonth()){state.tx=state.tx.filter(t=>t.forOther&&!t.recovered);state.incomes=[];state.month=curMonth();} // 保留未回收代墊
     save(); // 立刻用新 KEY＋新結構存回，完成搬家
   }
   function save(){state._v=SCHEMA;Store.set(KEY,JSON.stringify(state));}
 
+  const inMonth=t=>{const d=new Date(t.ts);return (d.getFullYear()+'-'+(d.getMonth()+1))===state.month;};
   const incomeTotal=()=>state.incomes.reduce((s,i)=>s+i.amt,0);
-  const spentOf=id=>state.tx.filter(t=>t.cat===id&&!t.forOther).reduce((s,t)=>s+t.amt,0);
-  const ownSpend=()=>state.tx.filter(t=>!t.forOther).reduce((s,t)=>s+t.amt,0);
-  const cardSpend=()=>state.tx.filter(t=>t.card).reduce((s,t)=>s+t.amt,0);
-  const lentUnrecovered=()=>state.tx.filter(t=>t.forOther&&!t.recovered).reduce((s,t)=>s+t.amt,0);
+  // 信封＝本月消費：含未回收代墊；回收後不算（退回額度）
+  const spentOf=id=>state.tx.filter(t=>t.cat===id&&inMonth(t)&&!(t.forOther&&t.recovered)).reduce((s,t)=>s+t.amt,0);
+  const ownSpend=()=>state.tx.filter(t=>inMonth(t)&&!t.forOther).reduce((s,t)=>s+t.amt,0);
+  const cardSpend=()=>state.tx.filter(t=>inMonth(t)&&t.card&&!(t.forOther&&t.recovered)).reduce((s,t)=>s+t.amt,0);
+  const lentUnrecovered=()=>state.tx.filter(t=>inMonth(t)&&t.forOther&&!t.recovered).reduce((s,t)=>s+t.amt,0);
 
   function renderHeader(){document.getElementById('title').textContent=state.profile.name?state.profile.name+' 的理財':'我的理財';
     document.getElementById('banner').classList.toggle('show',!state.setup);}
@@ -253,7 +254,8 @@
     const list=state.tx.map((t,i)=>({t,i})).filter(o=>o.t.forOther&&!o.t.recovered);
     if(!list.length){box.innerHTML='<div class="empty">沒有未回收的代墊款。</div>';return;}
     box.innerHTML='';list.forEach(o=>{const d=new Date(o.t.ts);const el=document.createElement('div');el.className='log-item';
-      el.innerHTML='<div>'+(o.t.note||'代墊')+' <span style="color:#B8B4AA">'+(d.getMonth()+1)+'/'+d.getDate()+'</span></div><div><span class="num" style="font-weight:700;color:var(--purple)">'+grp(o.t.amt)+'</span> <button class="recv" data-i="'+o.i+'">已回收</button></div>';box.appendChild(el);});
+      const carried=!inMonth(o.t);
+      el.innerHTML='<div>'+(o.t.note||'代墊')+' <span style="color:#B8B4AA">'+(d.getMonth()+1)+'/'+d.getDate()+'</span>'+(carried?' <span class="tg" style="background:#FBF0DC;color:#B8892B">上月遞延</span>':'')+'</div><div><span class="num" style="font-weight:700;color:var(--purple)">'+grp(o.t.amt)+'</span> <button class="recv" data-i="'+o.i+'">已回收</button></div>';box.appendChild(el);});
     box.querySelectorAll('.recv').forEach(b=>b.onclick=()=>{state.tx[+b.dataset.i].recovered=true;save();renderAll();});}
   function renderLog(){const box=document.getElementById('log');
     if(!state.tx.length){box.innerHTML='<div class="empty">還沒有支出記錄。</div>';return;}
