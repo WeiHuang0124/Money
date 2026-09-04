@@ -9,7 +9,7 @@
     --teal:#0F6E56;--teal-bg:#E4F1EC;--coral:#C4571F;--coral-bg:#FBEBDF;--gold:#B8892B;--green:#2E8B57;--red:#B4322A;--blue:#2A6BB0;--purple:#7A4FB0}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;
-    -webkit-font-smoothing:antialiased;line-height:1.5;padding:calc(env(safe-area-inset-top) + 14px) 14px 44px;max-width:580px;margin:0 auto}
+    -webkit-font-smoothing:antialiased;line-height:1.5;padding:18px 14px 44px;max-width:580px;margin:0 auto}
   .num{font-variant-numeric:tabular-nums lining-nums}
   h1{font-size:20px;font-weight:700;margin:0 0 2px}
   .hi{color:var(--sub);font-size:13px;margin:0 0 14px}
@@ -76,8 +76,7 @@
   .empty{font-size:12.5px;color:var(--mut);padding:2px}
   .note{font-size:11.5px;color:var(--mut);line-height:1.7;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
   .apphead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-  .r-open{flex:0 0 auto;width:42px;height:42px;border-radius:12px;background:var(--teal-bg);border:1px solid #9FD8C4;display:flex;align-items:center;justify-content:center;cursor:pointer}
-  .r-open svg{width:21px;height:21px}
+  .r-open{display:block;width:100%;font-family:inherit;font-size:14px;font-weight:700;color:var(--teal);background:var(--teal-bg);border:1px solid #9FD8C4;border-radius:11px;padding:12px;cursor:pointer;margin-top:16px}
   .rmask{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:60;display:none;align-items:flex-end}
   .rmask.show{display:flex}
   .rpanel{background:var(--bg);width:100%;max-height:84vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 15px 30px}
@@ -97,7 +96,8 @@
 
 <div class="rmask" id="rMask"><div class="rpanel"><h2>資料救援 / 重整</h2><p class="rd">撈回這支手機、這個 App 存過的舊資料。點「撈回」把舊資料匯入現在的版本。<br>⚠️ 只撈得到「用這個入口記過」的資料。</p><div id="rList"></div><button class="rclose" id="rClose">關閉</button></div></div>
 
-<div class="apphead"><div><h1 id="title">我的理財</h1><p class="hi">收入・記帳・信用卡・代墊・存錢，全部自己設定</p></div><button class="r-open" id="rBtn" title="資料救援 / 撈回舊資料"><svg viewBox="0 0 24 24" fill="none" stroke="#0F6E56" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button></div>
+<h1 id="title">我的理財</h1>
+<p class="hi">收入・記帳・信用卡・代墊・存錢，全部自己設定</p>
 <div class="banner" id="banner">👋 第一次使用？先到「設定」填先存金額、信封和存錢目標，再回來記帳。</div>
 
 <div class="tabs">
@@ -176,6 +176,7 @@
   <button class="savebtn" id="saveSettings">儲存設定</button>
 </div>
 
+<button class="r-open" id="rBtn"><svg viewBox="0 0 24 24" fill="none" stroke="#0F6E56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;vertical-align:-3px;margin-right:6px"><path d="M21 12a9 9 0 11-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>資料救援 / 撈回舊資料</button>
 <p class="note">
   <b>信用卡（做法B）：</b>刷卡當下就記，信封照扣（反映你這個月花多少）；月底結算時刷卡金額會<b>當成已花算進去</b>——因為那筆現金下個月繳卡費才離開戶頭。這樣你不會誤把「該留來繳卡費的錢」存掉。<br>
   <b>代墊：</b>幫別人付的不算你的信封，會進「應收款」；回收後按「已回收」，那筆才回到可存的錢。<br>
