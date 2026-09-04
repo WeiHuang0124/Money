@@ -6,7 +6,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root{--bg:#FBFAF7;--ink:#1A2420;--sub:#5C625E;--mut:#8A8F8B;--line:#E5E2D9;--card:#FFFFFF;
-    --teal:#0F6E56;--teal-bg:#E4F1EC;--coral:#C4571F;--gold:#B8892B;--green:#2E8B57;--red:#B4322A}
+    --teal:#0F6E56;--teal-bg:#E4F1EC;--coral:#C4571F;--coral-bg:#FBEBDF;--gold:#B8892B;--green:#2E8B57;--red:#B4322A;--blue:#2A6BB0;--purple:#7A4FB0}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC",system-ui,sans-serif;
     -webkit-font-smoothing:antialiased;line-height:1.5;padding:18px 14px 44px;max-width:580px;margin:0 auto}
@@ -15,41 +15,46 @@
   .hi{color:var(--sub);font-size:13px;margin:0 0 14px}
   .banner{background:var(--teal-bg);border:1px solid #Bfe0d3;border-radius:11px;padding:11px 13px;font-size:13px;color:var(--teal);margin-bottom:14px;display:none}
   .banner.show{display:block}
-
   .hero{background:linear-gradient(145deg,#124637,#0F6E56);color:#fff;border-radius:16px;padding:15px 17px;margin-bottom:12px}
   .hero .lab{font-size:12.5px;opacity:.85}
-  .hero .big{font-size:32px;font-weight:900;line-height:1.1;margin:2px 0 3px}
+  .hero .big{font-size:30px;font-weight:900;line-height:1.1;margin:2px 0 3px}
   .hero .foot{font-size:12px;opacity:.85}
   .hero.over{background:linear-gradient(145deg,#8a2b24,#B4322A)}
   .hbar{height:8px;background:rgba(255,255,255,.2);border-radius:99px;overflow:hidden;margin-top:8px}
   .hbar-f{height:100%;background:linear-gradient(90deg,#2FD8A0,#F2C24B);border-radius:99px;width:2%;transition:width .5s}
-
   .tabs{display:flex;gap:6px;margin-bottom:14px}
   .tab{flex:1;text-align:center;font-family:inherit;font-size:13.5px;font-weight:500;color:var(--sub);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 0;cursor:pointer}
   .tab.on{background:var(--teal);color:#fff;border-color:var(--teal);font-weight:700}
   .panel{display:none}.panel.on{display:block}
-
-  .env{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 14px;margin-bottom:9px}
-  .env-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
-  .env-name{font-size:15px;font-weight:700}
-  .env-fig .rem{font-weight:700}.env-fig .bud{color:var(--mut)}
-  .track{height:8px;background:#EEEBE2;border-radius:99px;overflow:hidden}
-  .fill{height:100%;border-radius:99px;width:0;transition:width .5s}
-  .env-add{margin-top:9px;display:flex;gap:7px}
-  .env-add input{flex:1;font-family:inherit;font-size:14px;border:1px solid var(--line);border-radius:9px;padding:8px 10px;outline:none;min-width:0}
-  .env-add button{font-family:inherit;font-size:14px;font-weight:700;color:#fff;background:var(--teal);border:none;border-radius:9px;padding:8px 14px;cursor:pointer}
-
-  .log-item{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 12px;background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:6px}
+  .sec{font-size:13px;font-weight:700;color:var(--mut);margin:16px 2px 8px}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:13px 14px;margin-bottom:11px}
+  .row2{display:flex;gap:7px}
+  .inp{font-family:inherit;font-size:14px;border:1px solid var(--line);border-radius:9px;padding:9px 10px;outline:none;min-width:0;width:100%}
+  .inp:focus{border-color:var(--teal)}
+  .btn{font-family:inherit;font-size:14px;font-weight:700;color:#fff;background:var(--teal);border:none;border-radius:9px;padding:9px 15px;cursor:pointer;white-space:nowrap}
+  .flags{display:flex;gap:8px;margin:9px 0}
+  .flag{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;font-size:13px;font-weight:500;border:1.5px solid var(--line);border-radius:9px;padding:8px;cursor:pointer;user-select:none;background:#fff;color:var(--sub)}
+  .flag.on.card{border-color:var(--blue);background:#E6EEF5;color:var(--blue);font-weight:700}
+  .flag.on.other{border-color:var(--purple);background:#F0EAF7;color:var(--purple);font-weight:700}
+  .inc-item,.log-item{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:8px 11px;background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:6px}
+  .tags{display:inline-flex;gap:4px;margin-left:5px}
+  .tg{font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px}
+  .tg-card{background:#E6EEF5;color:var(--blue)}.tg-other{background:#F0EAF7;color:var(--purple)}
   .del{background:none;border:none;color:var(--mut);cursor:pointer;font-size:15px;padding:2px 4px}
-
-  .settle{width:100%;font-family:inherit;font-size:15px;font-weight:700;color:#fff;background:var(--gold);border:none;border-radius:12px;padding:14px;cursor:pointer;margin:6px 0 10px}
+  .recv{font-family:inherit;font-size:11.5px;font-weight:700;color:#fff;background:var(--green);border:none;border-radius:99px;padding:4px 10px;cursor:pointer}
+  .env{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:11px 13px;margin-bottom:8px}
+  .env-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
+  .env-name{font-size:14.5px;font-weight:700}
+  .env-fig .rem{font-weight:700}.env-fig .bud{color:var(--mut)}
+  .track{height:7px;background:#EEEBE2;border-radius:99px;overflow:hidden}
+  .fill{height:100%;border-radius:99px;width:0;transition:width .5s}
+  .settle{width:100%;font-family:inherit;font-size:15px;font-weight:700;color:#fff;background:var(--gold);border:none;border-radius:12px;padding:14px;cursor:pointer;margin:8px 0 10px}
   .settle-card{background:#FBF4E4;border:1px solid #E4CE93;border-radius:13px;padding:15px 16px;margin-bottom:10px;display:none}
   .settle-card.show{display:block}
   .settle-card h3{margin:0 0 9px;font-size:15px;color:var(--gold)}
-  .settle-card .row{display:flex;justify-content:space-between;font-size:13.5px;padding:4px 0}
-  .settle-card .tot{font-size:15px;font-weight:700;color:var(--teal);margin-top:8px;padding-top:8px;border-top:2px solid #E4CE93;display:flex;justify-content:space-between}
-  .settle-card .sub{font-size:12px;color:var(--sub);margin-top:8px;line-height:1.6}
-
+  .settle-card .r{display:flex;justify-content:space-between;font-size:13.5px;padding:4px 0}
+  .settle-card .tot{font-size:16px;font-weight:700;color:var(--teal);margin-top:8px;padding-top:8px;border-top:2px solid #E4CE93;display:flex;justify-content:space-between}
+  .settle-card .sub{font-size:12px;color:var(--sub);margin-top:9px;line-height:1.65}
   .mrow{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:10px 13px;margin-bottom:7px}
   .mrow.ms{border-color:var(--gold);background:#FBF4E4}
   .m-date{font-size:14px;font-weight:700;width:70px;flex:0 0 auto}
@@ -57,26 +62,24 @@
   .m-in input{width:105px;font-family:inherit;font-size:15px;font-weight:700;color:var(--teal);border:none;border-bottom:1px solid var(--line);background:none;outline:none;font-variant-numeric:tabular-nums}
   .m-cum{text-align:right}.m-cum .c{font-size:15px;font-weight:700}.m-cum .l{font-size:10px;color:var(--mut)}
   .m-badge{font-size:10px;font-weight:700;color:#fff;background:var(--gold);border-radius:99px;padding:2px 7px;margin-top:2px;display:inline-block}
-
   .set-g{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px;margin-bottom:11px}
   .set-g h3{margin:0 0 10px;font-size:14px;font-weight:700}
-  .fld{margin-bottom:10px}
-  .fld label{font-size:12.5px;color:var(--sub);display:block;margin-bottom:3px}
+  .fld{margin-bottom:10px}.fld label{font-size:12.5px;color:var(--sub);display:block;margin-bottom:3px}
   .fld input{width:100%;font-family:inherit;font-size:15px;border:1px solid var(--line);border-radius:9px;padding:9px 11px;outline:none}
-  .fld input:focus{border-color:var(--teal)}
   .two{display:flex;gap:8px}.two .fld{flex:1}
   .env-edit{display:flex;gap:7px;align-items:center;margin-bottom:7px}
   .env-edit input.n{flex:2}.env-edit input.b{flex:1;text-align:right}
   .env-edit input{font-family:inherit;font-size:14px;border:1px solid var(--line);border-radius:8px;padding:8px 9px;outline:none;min-width:0}
-  .env-edit .x{background:none;border:none;color:var(--red);font-size:18px;cursor:pointer;flex:0 0 auto;padding:0 2px}
+  .env-edit .x{background:none;border:none;color:var(--red);font-size:18px;cursor:pointer;padding:0 2px}
   .addbtn{width:100%;font-family:inherit;font-size:14px;font-weight:700;color:var(--teal);background:var(--teal-bg);border:1px dashed #9FD8C4;border-radius:9px;padding:10px;cursor:pointer;margin-top:2px}
   .savebtn{width:100%;font-family:inherit;font-size:15px;font-weight:700;color:#fff;background:var(--teal);border:none;border-radius:11px;padding:13px;cursor:pointer;margin-top:6px}
+  .empty{font-size:12.5px;color:var(--mut);padding:2px}
   .note{font-size:11.5px;color:var(--mut);line-height:1.7;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
 </style>
 
 <h1 id="title">我的理財</h1>
-<p class="hi" id="hi">記帳、存錢，全部自己設定</p>
-<div class="banner" id="banner">👋 第一次使用？先到下方 <b>設定</b> 填你的月薪、信封和存錢目標，就是你自己的了。</div>
+<p class="hi">收入・記帳・信用卡・代墊・存錢，全部自己設定</p>
+<div class="banner" id="banner">👋 第一次使用？先到「設定」填先存金額、信封和存錢目標，再回來記帳。</div>
 
 <div class="tabs">
   <button class="tab on" data-p="spend">記帳</button>
@@ -84,21 +87,43 @@
   <button class="tab" data-p="set">設定</button>
 </div>
 
-<!-- 記帳 -->
 <div class="panel on" id="spend">
   <div class="hero" id="spendHero">
-    <div class="lab">本月生活費還可以花</div>
-    <div class="big num">NT$<span id="remainTotal">0</span></div>
-    <div class="foot num">預算 <span id="budTotal">0</span> · 已花 <span id="spentTotal">0</span></div>
+    <div class="lab">本月結餘（收入 − 支出）</div>
+    <div class="big num">NT$<span id="netTotal">0</span></div>
+    <div class="foot num">收入 <span id="incTotal">0</span> · 自己花 <span id="spentTotal">0</span> · 刷卡待付 <span id="cardTotal">0</span></div>
   </div>
+
+  <div class="sec">本月收入</div>
+  <div class="box">
+    <div class="row2"><input class="inp" id="inc-name" placeholder="來源（薪水/事業…）"><input class="inp" id="inc-amt" inputmode="numeric" placeholder="金額" style="max-width:120px"><button class="btn" id="inc-add">＋</button></div>
+    <div id="incList" style="margin-top:9px"></div>
+  </div>
+
+  <div class="sec">記一筆支出</div>
+  <div class="box">
+    <div class="row2"><input class="inp" id="ex-amt" inputmode="numeric" placeholder="金額" style="max-width:110px"><select class="inp" id="ex-cat"></select></div>
+    <input class="inp" id="ex-note" placeholder="備註（可空；代墊可寫幫誰付）" style="margin-top:7px">
+    <div class="flags">
+      <div class="flag card" id="fl-card"><span>💳</span>信用卡付</div>
+      <div class="flag other" id="fl-other"><span>🤝</span>幫別人代墊</div>
+    </div>
+    <button class="btn" id="ex-add" style="width:100%">記錄這筆</button>
+  </div>
+
+  <div class="sec">信封狀態</div>
   <div id="envs"></div>
-  <div style="font-size:13px;font-weight:700;color:var(--mut);margin:14px 2px 8px">最近記帳</div>
+
+  <div class="sec">應收款（代墊未回收）</div>
+  <div id="recvList"></div>
+
+  <div class="sec">最近記帳</div>
   <div id="log"></div>
+
   <button class="settle" id="settleBtn">📊 月底結算 · 算我這個月能存多少</button>
   <div class="settle-card" id="settleCard"></div>
 </div>
 
-<!-- 存錢 -->
 <div class="panel" id="save">
   <div class="hero">
     <div class="lab">目前存款</div>
@@ -109,11 +134,9 @@
   <div id="months"></div>
 </div>
 
-<!-- 設定 -->
 <div class="panel" id="set">
   <div class="set-g"><h3>基本</h3>
     <div class="fld"><label>你的名字（顯示用）</label><input id="s-name" placeholder="例：小美"></div>
-    <div class="fld"><label>每月收入</label><input id="s-income" inputmode="numeric" placeholder="40000"></div>
   </div>
   <div class="set-g"><h3>每月先存（先存再花）</h3>
     <div class="two">
@@ -135,155 +158,124 @@
 </div>
 
 <p class="note">
-  資料存在你自己的手機（localStorage），跟別人分開。換手機不會同步。<br>
-  存款建議放高活存，別進股市或幣。這是記帳工具，不是投資建議。
+  <b>信用卡（做法B）：</b>刷卡當下就記，信封照扣（反映你這個月花多少）；月底結算時刷卡金額會<b>當成已花算進去</b>——因為那筆現金下個月繳卡費才離開戶頭。這樣你不會誤把「該留來繳卡費的錢」存掉。<br>
+  <b>代墊：</b>幫別人付的不算你的信封，會進「應收款」；回收後按「已回收」，那筆才回到可存的錢。<br>
+  資料存在你自己手機，跟別人分開。存款放高活存，別進股市或幣。非投資建議。
 </p>
 
 <script>
   const Store={mem:{},get(k){try{return localStorage.getItem(k);}catch(e){return this.mem[k]??null;}},
     set(k,v){try{localStorage.setItem(k,v);}catch(e){this.mem[k]=v;}}};
-  const KEY='myfin-v1';
-  const DEFAULT={
-    profile:{name:'',income:40000},
-    saverule:{amount:5000,acct:'存款戶頭'},
-    envelopes:[{id:'e1',name:'餐飲',budget:5000},{id:'e2',name:'交通',budget:2000},
-      {id:'e3',name:'娛樂',budget:2000},{id:'e4',name:'日用',budget:1500},{id:'e5',name:'其他',budget:1000}],
-    goal:{name:'存錢目標',target:200000},
-    saves:{}, tx:[], month:curMonth(), setup:false
-  };
+  const KEY='myfin-v2';
+  const DEFAULT={profile:{name:''},saverule:{amount:5000,acct:'存款戶頭'},
+    envelopes:[{id:'e1',name:'餐飲',budget:5000},{id:'e2',name:'交通',budget:2000},{id:'e3',name:'娛樂',budget:2000},{id:'e4',name:'日用',budget:1500},{id:'e5',name:'其他',budget:1000}],
+    goal:{name:'存錢目標',target:200000},incomes:[],tx:[],saves:{},month:curMonth(),setup:false};
   let state=JSON.parse(JSON.stringify(DEFAULT));
+  let flCard=false,flOther=false;
   function curMonth(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1);}
   const grp=n=>Math.round(n).toLocaleString('en-US');
   const parse=s=>parseInt(String(s).replace(/[^0-9]/g,''),10)||0;
 
   function load(){const v=Store.get(KEY);if(v){try{state=Object.assign(JSON.parse(JSON.stringify(DEFAULT)),JSON.parse(v));}catch(e){}}
-    if(state.month!==curMonth()){state.tx=[];state.month=curMonth();save();}}
+    if(!state.incomes)state.incomes=[];if(!state.tx)state.tx=[];
+    if(state.month!==curMonth()){state.tx=[];state.incomes=[];state.month=curMonth();save();}}
   function save(){Store.set(KEY,JSON.stringify(state));}
-  const spentOf=id=>state.tx.filter(t=>t.cat===id).reduce((s,t)=>s+t.amt,0);
 
-  // 月份清單（從本月起 18 個月）
+  const incomeTotal=()=>state.incomes.reduce((s,i)=>s+i.amt,0);
+  const spentOf=id=>state.tx.filter(t=>t.cat===id&&!t.forOther).reduce((s,t)=>s+t.amt,0);
+  const ownSpend=()=>state.tx.filter(t=>!t.forOther).reduce((s,t)=>s+t.amt,0);
+  const cardSpend=()=>state.tx.filter(t=>t.card).reduce((s,t)=>s+t.amt,0);
+  const lentUnrecovered=()=>state.tx.filter(t=>t.forOther&&!t.recovered).reduce((s,t)=>s+t.amt,0);
+
+  function renderHeader(){document.getElementById('title').textContent=state.profile.name?state.profile.name+' 的理財':'我的理財';
+    document.getElementById('banner').classList.toggle('show',!state.setup);}
+  function renderHero(){const I=incomeTotal(),S=ownSpend(),C=cardSpend(),net=I-S;
+    document.getElementById('netTotal').textContent=grp(net);document.getElementById('incTotal').textContent=grp(I);
+    document.getElementById('spentTotal').textContent=grp(S);document.getElementById('cardTotal').textContent=grp(C);
+    document.getElementById('spendHero').classList.toggle('over',net<0);}
+  function renderIncome(){const box=document.getElementById('incList');
+    if(!state.incomes.length){box.innerHTML='<div class="empty">還沒記收入。薪水、事業提領都可記多筆。</div>';return;}
+    box.innerHTML='';state.incomes.forEach((it,i)=>{const el=document.createElement('div');el.className='inc-item';
+      el.innerHTML='<div>'+it.name+'</div><div><span class="num" style="font-weight:700;color:var(--green)">＋'+grp(it.amt)+'</span> <button class="del" data-i="'+i+'">✕</button></div>';box.appendChild(el);});
+    box.querySelectorAll('.del').forEach(b=>b.onclick=()=>{state.incomes.splice(+b.dataset.i,1);save();renderIncome();renderHero();});}
+  function renderCatSelect(){const sel=document.getElementById('ex-cat');sel.innerHTML='';
+    state.envelopes.forEach(e=>{const o=document.createElement('option');o.value=e.id;o.textContent=e.name;sel.appendChild(o);});}
+  function renderEnvs(){const box=document.getElementById('envs');box.innerHTML='';
+    state.envelopes.forEach(e=>{const sp=spentOf(e.id),rem=e.budget-sp;const pct=e.budget>0?Math.min(100,sp/e.budget*100):0;
+      const col=pct>=100?'var(--red)':pct>=80?'var(--gold)':'var(--teal)';const el=document.createElement('div');el.className='env';
+      el.innerHTML='<div class="env-top"><div class="env-name">'+e.name+'</div><div class="env-fig num">剩 <span class="rem" style="color:'+(rem<0?'var(--red)':'var(--ink)')+'">'+grp(rem)+'</span> <span class="bud">/ '+grp(e.budget)+'</span></div></div><div class="track"><div class="fill" style="width:'+pct+'%;background:'+col+'"></div></div>';
+      box.appendChild(el);});}
+  function renderRecv(){const box=document.getElementById('recvList');
+    const list=state.tx.map((t,i)=>({t,i})).filter(o=>o.t.forOther&&!o.t.recovered);
+    if(!list.length){box.innerHTML='<div class="empty">沒有未回收的代墊款。</div>';return;}
+    box.innerHTML='';list.forEach(o=>{const d=new Date(o.t.ts);const el=document.createElement('div');el.className='log-item';
+      el.innerHTML='<div>'+(o.t.note||'代墊')+' <span style="color:#B8B4AA">'+(d.getMonth()+1)+'/'+d.getDate()+'</span></div><div><span class="num" style="font-weight:700;color:var(--purple)">'+grp(o.t.amt)+'</span> <button class="recv" data-i="'+o.i+'">已回收</button></div>';box.appendChild(el);});
+    box.querySelectorAll('.recv').forEach(b=>b.onclick=()=>{state.tx[+b.dataset.i].recovered=true;save();renderAll();});}
+  function renderLog(){const box=document.getElementById('log');
+    if(!state.tx.length){box.innerHTML='<div class="empty">還沒有支出記錄。</div>';return;}
+    box.innerHTML='';state.tx.slice(0,15).forEach((t,i)=>{const e=state.envelopes.find(x=>x.id===t.cat);const d=new Date(t.ts);
+      let tags='';if(t.card)tags+='<span class="tg tg-card">💳卡</span>';if(t.forOther)tags+='<span class="tg tg-other">🤝代墊'+(t.recovered?'✓':'')+'</span>';
+      const el=document.createElement('div');el.className='log-item';
+      el.innerHTML='<div>'+(e?e.name:'?')+(t.note?' · '+t.note:'')+' <span style="color:#B8B4AA">'+(d.getMonth()+1)+'/'+d.getDate()+'</span><span class="tags">'+tags+'</span></div><div><span class="num" style="font-weight:700">−'+grp(t.amt)+'</span> <button class="del" data-i="'+i+'">✕</button></div>';box.appendChild(el);});
+    box.querySelectorAll('.del').forEach(b=>b.onclick=()=>{state.tx.splice(+b.dataset.i,1);save();renderAll();});}
+
+  document.getElementById('inc-add').onclick=()=>{const n=document.getElementById('inc-name').value.trim()||'收入';const a=parse(document.getElementById('inc-amt').value);if(!a)return;
+    state.incomes.unshift({name:n,amt:a,ts:Date.now()});document.getElementById('inc-name').value='';document.getElementById('inc-amt').value='';save();renderIncome();renderHero();};
+  document.getElementById('fl-card').onclick=function(){flCard=!flCard;this.classList.toggle('on',flCard);};
+  document.getElementById('fl-other').onclick=function(){flOther=!flOther;this.classList.toggle('on',flOther);};
+  document.getElementById('ex-add').onclick=()=>{const amt=parse(document.getElementById('ex-amt').value);if(!amt)return;
+    const cat=document.getElementById('ex-cat').value;const note=document.getElementById('ex-note').value.trim();
+    state.tx.unshift({cat,amt,note,ts:Date.now(),card:flCard,forOther:flOther,recovered:false});
+    document.getElementById('ex-amt').value='';document.getElementById('ex-note').value='';
+    flCard=false;flOther=false;document.getElementById('fl-card').classList.remove('on');document.getElementById('fl-other').classList.remove('on');save();renderAll();};
+
+  document.getElementById('settleBtn').onclick=()=>{const I=incomeTotal(),S=ownSpend(),C=cardSpend(),L=lentUnrecovered();
+    const fixed=state.saverule.amount,acct=state.saverule.acct||'存款戶頭';const savable=Math.max(0,I-fixed-S-L);
+    let html='<h3>月底結算 · 該存多少</h3>'+
+      '<div class="r"><span>本月收入</span><b class="num">'+grp(I)+'</b></div>'+
+      '<div class="r"><span>先存（發薪日已轉 → '+acct+'）</span><b class="num">−'+grp(fixed)+'</b></div>'+
+      '<div class="r"><span>本月自己花費（現金＋刷卡）</span><b class="num">−'+grp(S)+'</b></div>'+
+      '<div class="r"><span>代墊未回收（別人欠你）</span><b class="num">−'+grp(L)+'</b></div>'+
+      '<div class="tot"><span>這個月還可以存</span><span class="num">'+grp(savable)+'</span></div>';
+    let sub='';
+    if(C>0)sub+='💳 本月刷卡 <b>'+grp(C)+'</b>：下個月繳卡費才扣現金，但已算進「自己花費」，所以不會誤存。留著別花。<br>';
+    if(L>0)sub+='🤝 代墊未回收 <b>'+grp(L)+'</b>：回收後按「已回收」，那筆就回到可存的錢。<br>';
+    if(savable>0)sub+='👉 月底把 <b>'+grp(savable)+'</b> 轉進「'+acct+'」，並到「存錢」分頁把這個月存入填成這個數字。';
+    else if(I>0)sub+='這個月沒有多的可存，先顧好現金、下月調整信封。';
+    else sub='還沒記收入——先到上面「本月收入」記一下，結算才準。';
+    const card=document.getElementById('settleCard');card.innerHTML=html+'<p class="sub">'+sub+'</p>';card.classList.add('show');card.scrollIntoView({behavior:'smooth',block:'center'});};
+
   function genMonths(){const out=[];const d=new Date();let y=d.getFullYear(),m=d.getMonth()+1;
     for(let i=0;i<18;i++){out.push({key:y+'-'+m,label:y+'/'+String(m).padStart(2,'0')});m++;if(m>12){m=1;y++;}}return out;}
   function savedFor(k){return state.saves[k]!=null?state.saves[k]:0;}
-
-  function renderHeader(){
-    document.getElementById('title').textContent=state.profile.name?state.profile.name+' 的理財':'我的理財';
-    document.getElementById('banner').classList.toggle('show',!state.setup);
-  }
-  function renderSpend(){
-    let budT=0,spentT=0;const box=document.getElementById('envs');box.innerHTML='';
-    state.envelopes.forEach(e=>{
-      const sp=spentOf(e.id),rem=e.budget-sp;budT+=e.budget;spentT+=sp;
-      const pct=e.budget>0?Math.min(100,sp/e.budget*100):0;
-      const col=pct>=100?'var(--red)':pct>=80?'var(--gold)':'var(--teal)';
-      const el=document.createElement('div');el.className='env';
-      el.innerHTML='<div class="env-top"><div class="env-name">'+e.name+'</div>'+
-        '<div class="env-fig num">剩 <span class="rem" style="color:'+(rem<0?'var(--red)':'var(--ink)')+'">'+grp(rem)+'</span> <span class="bud">/ '+grp(e.budget)+'</span></div></div>'+
-        '<div class="track"><div class="fill" style="width:'+pct+'%;background:'+col+'"></div></div>'+
-        '<div class="env-add"><input type="text" inputmode="numeric" placeholder="金額" data-amt="'+e.id+'">'+
-        '<input type="text" placeholder="備註（可空）" data-note="'+e.id+'"><button data-add="'+e.id+'">＋</button></div>';
-      box.appendChild(el);
-    });
-    const rem=budT-spentT;
-    document.getElementById('remainTotal').textContent=grp(rem);
-    document.getElementById('budTotal').textContent=grp(budT);
-    document.getElementById('spentTotal').textContent=grp(spentT);
-    document.getElementById('spendHero').classList.toggle('over',rem<0);
-    box.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{
-      const id=b.dataset.add,ai=box.querySelector('[data-amt="'+id+'"]'),ni=box.querySelector('[data-note="'+id+'"]');
-      const amt=parse(ai.value);if(!amt)return;
-      state.tx.unshift({cat:id,amt,note:ni.value.trim(),ts:Date.now()});save();renderSpend();renderLog();});
-    renderLog();
-  }
-  function renderLog(){
-    const box=document.getElementById('log');
-    if(!state.tx.length){box.innerHTML='<div style="font-size:12.5px;color:var(--mut);padding:2px">還沒有記錄。</div>';return;}
-    box.innerHTML='';
-    state.tx.slice(0,12).forEach((t,i)=>{const e=state.envelopes.find(x=>x.id===t.cat);const d=new Date(t.ts);
-      const el=document.createElement('div');el.className='log-item';
-      el.innerHTML='<div>'+(e?e.name:'?')+(t.note?' · '+t.note:'')+' <span style="color:#B8B4AA">'+(d.getMonth()+1)+'/'+d.getDate()+'</span></div>'+
-        '<div><span class="num" style="font-weight:700">−'+grp(t.amt)+'</span> <button class="del" data-i="'+i+'">✕</button></div>';
-      box.appendChild(el);});
-    box.querySelectorAll('.del').forEach(b=>b.onclick=()=>{state.tx.splice(+b.dataset.i,1);save();renderSpend();});
-  }
-  document.getElementById('settleBtn').onclick=()=>{
-    const budT=state.envelopes.reduce((s,e)=>s+e.budget,0);
-    const spentT=state.envelopes.reduce((s,e)=>s+spentOf(e.id),0);
-    const leftover=budT-spentT;const fixed=state.saverule.amount;const acct=state.saverule.acct||'存款戶頭';
-    const card=document.getElementById('settleCard');
-    let html='<h3>月底結算 · 該存多少</h3><div class="row"><span>發薪日已先存 → '+acct+'</span><b class="num">'+grp(fixed)+'</b></div>';
-    if(leftover>=0){html+='<div class="row"><span>本月生活省下 → 再存進 '+acct+'</span><b class="num" style="color:var(--green)">＋'+grp(leftover)+'</b></div>'+
-      '<div class="tot"><span>這個月共存</span><span class="num">'+grp(fixed+leftover)+'</span></div>'+
-      '<p class="sub">👉 月底把 <b>'+grp(leftover)+'</b> 從生活帳戶再轉進「'+acct+'」。加上發薪日那 '+grp(fixed)+'，這個月共存 '+grp(fixed+leftover)+'。可到「存錢」分頁把這個月的存入改成這個數字。</p>';}
-    else{html+='<div class="row"><span>本月超支</span><b class="num" style="color:var(--red)">'+grp(leftover)+'</b></div>'+
-      '<p class="sub">⚠️ 這個月生活費超支 '+grp(-leftover)+'。這個月只存發薪日那 '+grp(fixed)+'，下個月把最容易超的信封收緊一點。</p>';}
-    card.innerHTML=html;card.classList.add('show');card.scrollIntoView({behavior:'smooth',block:'center'});
-  };
-
-  function renderSave(){
-    const box=document.getElementById('months');box.innerHTML='';let cum=0;const crossed=new Set();
-    const target=state.goal.target||0;
-    genMonths().forEach(mo=>{
-      const val=savedFor(mo.key);cum+=val;
-      let hit='';if(target&&cum>=target&&!crossed.has(target)){crossed.add(target);hit='達標 🎉';}
+  function renderSave(){const box=document.getElementById('months');box.innerHTML='';let cum=0;const crossed=new Set();const target=state.goal.target||0;
+    genMonths().forEach(mo=>{const val=savedFor(mo.key);cum+=val;let hit='';if(target&&cum>=target&&!crossed.has(target)){crossed.add(target);hit='達標 🎉';}
       const el=document.createElement('div');el.className='mrow'+(hit?' ms':'');
-      el.innerHTML='<div class="m-date">'+mo.label+'</div>'+
-        '<div class="m-in"><label>這個月存入</label><input type="text" inputmode="numeric" data-k="'+mo.key+'" value="'+grp(val)+'"></div>'+
-        '<div class="m-cum"><div class="c num">'+grp(cum)+'</div><div class="l">累計</div>'+(hit?'<div class="m-badge">'+hit+'</div>':'')+'</div>';
-      box.appendChild(el);
-    });
-    box.querySelectorAll('input[data-k]').forEach(inp=>{inp.onblur=()=>{state.saves[inp.dataset.k]=parse(inp.value);save();renderSave();};
-      inp.onkeydown=e=>{if(e.key==='Enter')inp.blur();};});
-    // hero
-    let total=0;genMonths().forEach(mo=>total+=savedFor(mo.key));
-    document.getElementById('cum').textContent=grp(total);
-    document.getElementById('goalLab').textContent=state.goal.name+' '+grp(target);
-    const pct=target?Math.min(100,Math.round(total/target*100)):0;
-    document.getElementById('goalPct').textContent=pct+'%';
-    document.getElementById('cumBar').style.width=Math.max(2,pct)+'%';
-  }
+      el.innerHTML='<div class="m-date">'+mo.label+'</div><div class="m-in"><label>這個月存入</label><input type="text" inputmode="numeric" data-k="'+mo.key+'" value="'+grp(val)+'"></div><div class="m-cum"><div class="c num">'+grp(cum)+'</div><div class="l">累計</div>'+(hit?'<div class="m-badge">'+hit+'</div>':'')+'</div>';box.appendChild(el);});
+    box.querySelectorAll('input[data-k]').forEach(inp=>{inp.onblur=()=>{state.saves[inp.dataset.k]=parse(inp.value);save();renderSave();};inp.onkeydown=e=>{if(e.key==='Enter')inp.blur();};});
+    let total=0;genMonths().forEach(mo=>total+=savedFor(mo.key));document.getElementById('cum').textContent=grp(total);
+    document.getElementById('goalLab').textContent=state.goal.name+' '+grp(target);const pct=target?Math.min(100,Math.round(total/target*100)):0;
+    document.getElementById('goalPct').textContent=pct+'%';document.getElementById('cumBar').style.width=Math.max(2,pct)+'%';}
 
-  // 設定
-  function renderSettings(){
-    document.getElementById('s-name').value=state.profile.name||'';
-    document.getElementById('s-income').value=state.profile.income||'';
-    document.getElementById('s-save').value=state.saverule.amount||'';
-    document.getElementById('s-acct').value=state.saverule.acct||'';
-    document.getElementById('s-goalname').value=state.goal.name||'';
-    document.getElementById('s-goaltarget').value=state.goal.target||'';
-    renderEnvEdit();
-  }
-  function renderEnvEdit(){
-    const box=document.getElementById('envEdit');box.innerHTML='';
+  function renderSettings(){document.getElementById('s-name').value=state.profile.name||'';
+    document.getElementById('s-save').value=state.saverule.amount||'';document.getElementById('s-acct').value=state.saverule.acct||'';
+    document.getElementById('s-goalname').value=state.goal.name||'';document.getElementById('s-goaltarget').value=state.goal.target||'';renderEnvEdit();}
+  function renderEnvEdit(){const box=document.getElementById('envEdit');box.innerHTML='';
     state.envelopes.forEach((e,i)=>{const el=document.createElement('div');el.className='env-edit';
-      el.innerHTML='<input class="n" value="'+e.name.replace(/"/g,'&quot;')+'" data-n="'+i+'"><input class="b" inputmode="numeric" value="'+e.budget+'" data-b="'+i+'"><button class="x" data-x="'+i+'">✕</button>';
-      box.appendChild(el);});
-    box.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{state.envelopes.splice(+b.dataset.x,1);renderEnvEdit();});
-  }
+      el.innerHTML='<input class="n" value="'+e.name.replace(/"/g,'&quot;')+'" data-n="'+i+'"><input class="b" inputmode="numeric" value="'+e.budget+'" data-b="'+i+'"><button class="x" data-x="'+i+'">✕</button>';box.appendChild(el);});
+    box.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{state.envelopes.splice(+b.dataset.x,1);renderEnvEdit();});}
   document.getElementById('addEnv').onclick=()=>{state.envelopes.push({id:'e'+Date.now(),name:'新信封',budget:1000});renderEnvEdit();};
-  document.getElementById('saveSettings').onclick=()=>{
-    state.profile.name=document.getElementById('s-name').value.trim();
-    state.profile.income=parse(document.getElementById('s-income').value);
-    state.saverule.amount=parse(document.getElementById('s-save').value);
-    state.saverule.acct=document.getElementById('s-acct').value.trim()||'存款戶頭';
-    state.goal.name=document.getElementById('s-goalname').value.trim()||'存錢目標';
-    state.goal.target=parse(document.getElementById('s-goaltarget').value);
-    // 收集信封編輯
-    const box=document.getElementById('envEdit');const rows=[...box.querySelectorAll('.env-edit')];
-    state.envelopes=rows.map((r,i)=>({id:state.envelopes[i]?state.envelopes[i].id:'e'+Date.now()+i,
-      name:r.querySelector('.n').value.trim()||'信封',budget:parse(r.querySelector('.b').value)}));
-    state.setup=true;save();
-    renderHeader();renderSpend();renderSave();
-    alert('設定已儲存！');
-    document.querySelector('.tab[data-p="spend"]').click();
-  };
+  document.getElementById('saveSettings').onclick=()=>{state.profile.name=document.getElementById('s-name').value.trim();
+    state.saverule.amount=parse(document.getElementById('s-save').value);state.saverule.acct=document.getElementById('s-acct').value.trim()||'存款戶頭';
+    state.goal.name=document.getElementById('s-goalname').value.trim()||'存錢目標';state.goal.target=parse(document.getElementById('s-goaltarget').value);
+    const rows=[...document.getElementById('envEdit').querySelectorAll('.env-edit')];
+    state.envelopes=rows.map((r,i)=>({id:state.envelopes[i]?state.envelopes[i].id:'e'+Date.now()+i,name:r.querySelector('.n').value.trim()||'信封',budget:parse(r.querySelector('.b').value)}));
+    state.setup=true;save();renderAll();alert('設定已儲存！');document.querySelector('.tab[data-p="spend"]').click();};
 
-  document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');
-    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
-    document.getElementById(b.dataset.p).classList.add('on');
-    if(b.dataset.p==='set')renderSettings();
-    if(b.dataset.p==='save')renderSave();});
+  function renderAll(){renderHeader();renderHero();renderIncome();renderCatSelect();renderEnvs();renderRecv();renderLog();}
+  document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));document.getElementById(b.dataset.p).classList.add('on');
+    if(b.dataset.p==='set')renderSettings();if(b.dataset.p==='save')renderSave();});
 
-  load();renderHeader();renderSpend();renderSave();renderSettings();
+  load();renderAll();renderSettings();renderSave();
 </script>
